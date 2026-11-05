@@ -61,6 +61,9 @@ class ServerTransport:
 
 The client opens in fullscreen mode.
 
+The top-left HUD shows local FPS, heartbeat packet loss (`PL`), and TCP
+round-trip ping.
+
 | Action | Key |
 |---|---|
 | Move | `W` `A` `S` `D` / `Z` `Q` `S` `D` (AZERTY) / arrow keys |

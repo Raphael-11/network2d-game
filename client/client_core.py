@@ -68,6 +68,10 @@ class ClientState:
 
         self.input_seq = 0
         self.my_keys = 0
+        self._next_ping = 0.0
+        self._pending_pings = {}
+        self._probe_results = deque(maxlen=20)
+        self.ping_ms = None
 
     # -- helpers -------------------------------------------------------------
     def name_of(self, pid):
@@ -135,6 +139,16 @@ class ClientState:
     # -- incoming ------------------------------------------------------------
     def pump(self):
         """Process everything the network thread has queued. Call once/frame."""
+        now = time.monotonic()
+        if now >= self._next_ping:
+            stamp = now
+            self._pending_pings[stamp] = stamp
+            self.net.send(P.msg(P.PING, t=stamp))
+            self._next_ping = now + P.HEARTBEAT_INTERVAL
+        for stamp in list(self._pending_pings):
+            if now - stamp > P.DISCONNECT_TIMEOUT:
+                self._pending_pings.pop(stamp)
+                self._probe_results.append(False)
         for msg in self.net.poll():
             self._handle(msg)
         self._interpolate()
@@ -144,7 +158,13 @@ class ClientState:
 
     def _handle(self, msg):
         t = msg["type"]
-        if t == P.LOGIN_OK:
+        if t == P.PONG:
+            stamp = msg.get("t")
+            if stamp in self._pending_pings:
+                self._pending_pings.pop(stamp)
+                self._probe_results.append(True)
+                self.ping_ms = max(0, round((time.monotonic() - stamp) * 1000))
+        elif t == P.LOGIN_OK:
             self.pid = msg["pid"]
             self.name = msg["name"]
             self.error = None

@@ -485,6 +485,7 @@ class App:
                 self._draw_select(dt)
             elif s.screen == SCREEN_RESULTS:
                 self._draw_results(dt)
+        self._draw_net_stats()
         if s.error and time.monotonic() - s.error_at < 3.5:
             r = self.text(s.error.upper(), self.f_body, TEXT, (W / 2, 26), "center")
             self.panel(r.inflate(36, 16), (120, 24, 40), 230, BAD, 10)
@@ -495,6 +496,13 @@ class App:
             self.text("CONNECTION LOST", self.f_h1, BAD, (box.centerx, box.y + 52), "center", outline=3)
             self.text("The server stopped responding. Close the window and reconnect.", self.f_small, MUTED,
                       (box.centerx, box.y + 112), "center")
+
+    def _draw_net_stats(self):
+        results = self.state._probe_results
+        loss = (100 * sum(not ok for ok in results) / len(results)) if results else 0
+        ping = "--" if self.state.ping_ms is None else "%dms" % self.state.ping_ms
+        text = "FPS %d   PL %.0f%%   PING %s" % (round(self.clock.get_fps()), loss, ping)
+        self.text(text, self.f_tiny, MUTED, (14, 12), "topleft")
 
     def _logo(self, cx, cy):
         bob = math.sin(self.t * 2) * 4
