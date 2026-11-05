@@ -1,0 +1,20 @@
+[Unit]
+Description=Brawl Arena game server (TCP)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=brawl
+Group=brawl
+WorkingDirectory=/opt/brawl-arena
+ExecStart=/usr/bin/python3 -u -m server.run_server --transport tcp --port 5000
+Restart=always
+RestartSec=2
+NoNewPrivileges=true
+ProtectSystem=full
+ProtectHome=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

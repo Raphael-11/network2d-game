@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# design references (third-party screenshots; not used by the game)
+518-hardest-characters-to-use-in-brawlhalla.jpg
+BestBrawlhallaBeginnerCharacters1.webp
+images.jpg
+Emerald Sky Ruins Arena.png
