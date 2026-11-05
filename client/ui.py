@@ -35,9 +35,8 @@ GOOD = (110, 230, 140)
 BAD = (255, 92, 104)
 ACCENT = (110, 200, 255)
 
-CONTROLS = [("Move", "A D / Arrows"), ("Jump / Double", "W / Space"), ("Fast-fall  (hold: drop)", "S / Down"),
-            ("Light  (+side / +down)", "J / C"), ("Heavy  (+side / +down)", "K / X"), ("Signature", "L / V"),
-            ("Dodge", "Shift")]
+CONTROLS = [("Move", "WASD / ZQSD"), ("Jump / Double", "W / Z / Space"), ("Fast-fall  (hold: drop)", "S / Down"),
+            ("Light attack", "Mouse / E"), ("Heavy attack", "X"), ("Signature", "F"), ("Dodge", "Q / A / Shift")]
 MOVE_LABEL = {"jab": "JAB", "lunge": "LUNGE", "sweep": "SWEEP", "spike": "SPIKE", "launcher": "LAUNCHER",
               "smash": "SMASH", "quake": "QUAKE", "cyclone": "CYCLONE"}
 COMIC_WORDS = ["POW!", "BAM!", "WHAM!", "KRAK!", "SMASH!", "BOOM!", "THWACK!", "KAPOW!"]
@@ -112,7 +111,7 @@ class App:
         pygame.mixer.pre_init(22050, -16, 1, 512)
         pygame.init()
         pygame.display.set_caption("Brawl Arena")
-        self.screen = pygame.display.set_mode((W, H))
+        self.screen = pygame.display.set_mode((W, H), pygame.FULLSCREEN | pygame.SCALED)
         self.clock = pygame.time.Clock()
         self.state = state
         self.server_label = server_label
@@ -263,7 +262,7 @@ class App:
                 self._pick(C.ORDER[(i + step) % len(C.ORDER)])
             elif s.screen == SCREEN_LOBBY and e.key == pygame.K_F5:
                 s.list_rooms()
-            elif s.screen == SCREEN_GAME and e.key in (pygame.K_w, pygame.K_UP, pygame.K_SPACE):
+            elif s.screen == SCREEN_GAME and e.key in (pygame.K_w, pygame.K_z, pygame.K_UP, pygame.K_SPACE):
                 self.sfx.play("jump", 0.7)
         if s.screen == SCREEN_GAME:
             self._send_game_input()
@@ -271,15 +270,16 @@ class App:
 
     def _send_game_input(self):
         k = pygame.key.get_pressed()
+        mouse_left = pygame.mouse.get_pressed(3)[0]
         keys = P.pack_keys(
-            left=k[pygame.K_LEFT] or k[pygame.K_a],
+            left=k[pygame.K_LEFT] or k[pygame.K_a] or k[pygame.K_q],
             right=k[pygame.K_RIGHT] or k[pygame.K_d],
-            jump=k[pygame.K_UP] or k[pygame.K_w] or k[pygame.K_SPACE],
+            jump=k[pygame.K_UP] or k[pygame.K_w] or k[pygame.K_z] or k[pygame.K_SPACE],
             down=k[pygame.K_DOWN] or k[pygame.K_s],
-            light_attack=k[pygame.K_j] or k[pygame.K_c],
-            heavy_attack=k[pygame.K_k] or k[pygame.K_x],
-            special=k[pygame.K_l] or k[pygame.K_v],
-            dodge=k[pygame.K_LSHIFT] or k[pygame.K_RSHIFT],
+            light_attack=mouse_left or k[pygame.K_e] or k[pygame.K_j] or k[pygame.K_c],
+            heavy_attack=k[pygame.K_x] or k[pygame.K_k],
+            special=k[pygame.K_f] or k[pygame.K_l] or k[pygame.K_v],
+            dodge=k[pygame.K_q] or k[pygame.K_a] or k[pygame.K_LSHIFT] or k[pygame.K_RSHIFT],
         )
         self.state.send_input(keys)
 

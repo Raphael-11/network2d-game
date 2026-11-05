@@ -59,15 +59,17 @@ class ServerTransport:
 
 ## Game controls
 
+The client opens in fullscreen mode.
+
 | Action | Key |
 |---|---|
-| Move | `A` `D` / Left, Right arrows |
-| Jump / double jump | `W`, Up arrow or Space |
+| Move | `W` `A` `S` `D` / `Z` `Q` `S` `D` (AZERTY) / arrow keys |
+| Jump / double jump | `W` or `Z`, Up arrow or Space |
 | Fast-fall (tap) / drop through soft platform (hold) | `S` / Down arrow |
-| Light attack | `J` / `C` |
-| Heavy attack (wind-up, big knockback) | `K` / `X` |
-| Signature ability | `L` / `V` |
-| Dodge (brief invulnerability) | Shift |
+| Light attack | Left mouse button / `E` |
+| Heavy attack (wind-up, big knockback) | `X` |
+| Signature ability | `F` |
+| Dodge (brief invulnerability) | `Q` / `A` / Shift |
 | Forfeit match | Esc twice |
 
 ## Moveset (every fighter)
