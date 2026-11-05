@@ -502,7 +502,9 @@ class App:
         loss = (100 * sum(not ok for ok in results) / len(results)) if results else 0
         ping = "--" if self.state.ping_ms is None else "%dms" % self.state.ping_ms
         text = "FPS %d   PL %.0f%%   PING %s" % (round(self.clock.get_fps()), loss, ping)
-        self.text(text, self.f_tiny, MUTED, (14, 12), "topleft")
+        label = self.text(text, self.f_tiny, TEXT, (18, 16), "topleft", outline=2)
+        self.panel(label.inflate(12, 8), (12, 10, 26), 190, (70, 62, 100), 6, 1)
+        self.text(text, self.f_tiny, TEXT, (18, 16), "topleft", outline=2)
 
     def _logo(self, cx, cy):
         bob = math.sin(self.t * 2) * 4
